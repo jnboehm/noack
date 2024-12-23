@@ -11,7 +11,7 @@ from cython.parallel import prange, parallel
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport malloc, free
 
-from .quad_tree cimport QuadTree, Node, is_close
+from openTSNE.quad_tree cimport QuadTree, Node, is_close
 
 
 cdef double EPSILON = np.finfo(np.float64).eps
