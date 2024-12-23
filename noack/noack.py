@@ -7,13 +7,13 @@ import numpy as np
 import openTSNE
 import openTSNE._tsne
 from openTSNE import TSNE
-from openTSNE.quad_tree import QuadTree
 from openTSNE.tsne import OptimizationInterrupt
 
 from ._noack import (
     estimate_negative_gradient_bh,
     estimate_positive_gradient_nn,
 )
+from .quad_tree import QuadTree
 
 EPSILON = np.finfo(np.float64).eps
 
