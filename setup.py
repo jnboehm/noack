@@ -218,6 +218,7 @@ extensions = [
     Extension("openTSNE.quad_tree", ["openTSNE/quad_tree.pyx"], language="c++"),
     Extension("openTSNE._tsne", ["openTSNE/_tsne.pyx"], language="c++"),
     Extension("openTSNE.kl_divergence", ["openTSNE/kl_divergence.pyx"], language="c++"),
+    Extension("openTSNE._noack", ["openTSNE/_noack.pyx"], language="c++"),
     annoy,
 ]
 
