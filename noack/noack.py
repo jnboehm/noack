@@ -875,10 +875,10 @@ class Noack(TSNE):
 
         # If initial positions are given in an array, use a copy of that
         if isinstance(initialization, np.ndarray):
-            openTSNE.tnse.init_checks.num_samples(
+            openTSNE.tsne.init_checks.num_samples(
                 initialization.shape[0], n_samples
             )
-            openTSNE.tnse.init_checks.num_dimensions(
+            openTSNE.tsne.init_checks.num_dimensions(
                 initialization.shape[1], self.n_components
             )
 
