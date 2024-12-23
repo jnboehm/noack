@@ -11,12 +11,14 @@ from os.path import join
 
 import setuptools
 from Cython.Distutils.build_ext import new_build_ext as build_ext
-from setuptools import setup, Extension
+from setuptools import Extension, setup
 
 
 class ConvertNotebooksToDocs(distutils.cmd.Command):
-    description = "Convert the example notebooks to reStructuredText that will" \
-                  "be available in the documentation."
+    description = (
+        "Convert the example notebooks to reStructuredText that will"
+        "be available in the documentation."
+    )
 
     user_options = []
 
@@ -27,8 +29,9 @@ class ConvertNotebooksToDocs(distutils.cmd.Command):
         pass
 
     def run(self):
-        import nbconvert
         from os.path import join
+
+        import nbconvert
 
         exporter = nbconvert.RSTExporter()
         writer = nbconvert.writers.FilesWriter()
@@ -52,6 +55,7 @@ class ConvertNotebooksToDocs(distutils.cmd.Command):
 
 def get_numpy_include():
     import numpy
+
     return numpy.get_include()
 
 
@@ -147,9 +151,16 @@ class CythonBuildExt(build_ext):
 
         # Set minimum deployment version for MacOS
         if compiler == "unix" and platform.system() == "Darwin":
-            macos_deployment_target = os.environ.get("MACOSX_DEPLOYMENT_TARGET", "10.12")
-            extra_compile_args += [f"-mmacosx-version-min={macos_deployment_target}"]
-            extra_link_args += ["-stdlib=libc++", f"-mmacosx-version-min={macos_deployment_target}"]
+            macos_deployment_target = os.environ.get(
+                "MACOSX_DEPLOYMENT_TARGET", "10.12"
+            )
+            extra_compile_args += [
+                f"-mmacosx-version-min={macos_deployment_target}"
+            ]
+            extra_link_args += [
+                "-stdlib=libc++",
+                f"-mmacosx-version-min={macos_deployment_target}",
+            ]
 
         # We don't want the compiler to optimize for system architecture if
         # we're building packages to be distributed by conda-forge, but if the
@@ -215,10 +226,16 @@ annoy = Extension(
 
 # Other extensions
 extensions = [
-    Extension("openTSNE.quad_tree", ["openTSNE/quad_tree.pyx"], language="c++"),
+    Extension(
+        "openTSNE.quad_tree", ["openTSNE/quad_tree.pyx"], language="c++"
+    ),
     Extension("openTSNE._tsne", ["openTSNE/_tsne.pyx"], language="c++"),
-    Extension("openTSNE.kl_divergence", ["openTSNE/kl_divergence.pyx"], language="c++"),
     Extension("openTSNE._noack", ["openTSNE/_noack.pyx"], language="c++"),
+    Extension(
+        "openTSNE.kl_divergence",
+        ["openTSNE/kl_divergence.pyx"],
+        language="c++",
+    ),
     annoy,
 ]
 
@@ -258,7 +275,6 @@ setup(
     long_description=readme(),
     version=__version__,
     license="BSD-3-Clause",
-
     author="Pavlin Poličar",
     author_email="pavlin.g.p@gmail.com",
     url="https://github.com/pavlin-policar/openTSNE",
@@ -283,7 +299,6 @@ setup(
         "Topic :: Scientific/Engineering :: Visualization",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-
     packages=setuptools.find_packages(include=["openTSNE", "openTSNE.*"]),
     python_requires=">=3.9",
     install_requires=[
@@ -296,5 +311,8 @@ setup(
         "pynndescent": "pynndescent~=0.5.0",
     },
     ext_modules=extensions,
-    cmdclass={"build_ext": CythonBuildExt, "convert_notebooks": ConvertNotebooksToDocs},
+    cmdclass={
+        "build_ext": CythonBuildExt,
+        "convert_notebooks": ConvertNotebooksToDocs,
+    },
 )
