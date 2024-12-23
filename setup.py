@@ -273,6 +273,7 @@ setup(
     install_requires=[
         "numpy>=1.16.6",
         "scikit-learn>=0.20",
+        "openTSNE>=1.0.0",
         "scipy",
     ],
     extras_require={
