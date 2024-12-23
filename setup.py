@@ -201,11 +201,6 @@ extensions = [
         "noack.quad_tree", ["noack/quad_tree.pyx"], language="c++"
     ),
     Extension("noack._noack", ["noack/_noack.pyx"], language="c++"),
-    Extension(
-        "noack.kl_divergence",
-        ["noack/kl_divergence.pyx"],
-        language="c++",
-    ),
 ]
 
 
