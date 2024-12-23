@@ -203,27 +203,6 @@ extensions = [
     Extension("noack._noack", ["noack/_noack.pyx"], language="c++"),
 ]
 
-
-# Check if we have access to FFTW3 and if so, use that implementation
-if has_c_library("fftw3"):
-    print("FFTW3 header files found. Using FFTW implementation of FFT.")
-    extension_ = Extension(
-        "noack._matrix_mul.matrix_mul",
-        ["noack/_matrix_mul/matrix_mul_fftw3.pyx"],
-        libraries=["fftw3"],
-        language="c++",
-    )
-    extensions.append(extension_)
-else:
-    print("FFTW3 header files not found. Using numpy implementation of FFT.")
-    extension_ = Extension(
-        "noack._matrix_mul.matrix_mul",
-        ["noack/_matrix_mul/matrix_mul_numpy.pyx"],
-        language="c++",
-    )
-    extensions.append(extension_)
-
-
 def readme():
     with open("README.rst", encoding="utf-8") as f:
         return f.read()
