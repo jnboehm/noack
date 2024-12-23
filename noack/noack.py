@@ -1,5 +1,4 @@
 import logging
-from collections.abc import Iterable
 
 import numpy as np
 import openTSNE
