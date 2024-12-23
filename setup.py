@@ -136,19 +136,6 @@ class CythonBuildExt(build_ext):
                 "-fno-associative-math",
             ]
 
-        # Annoy specific flags
-        annoy_ext = None
-        for extension in extensions:
-            if "annoy.annoylib" in extension.name:
-                annoy_ext = extension
-        assert annoy_ext is not None, "Annoy extension not found!"
-
-        if compiler == "unix":
-            annoy_ext.extra_compile_args += ["-std=c++14"]
-            annoy_ext.extra_compile_args += ["-DANNOYLIB_MULTITHREADED_BUILD"]
-        elif compiler == "msvc":
-            annoy_ext.extra_compile_args += ["/std:c++14"]
-
         # Set minimum deployment version for MacOS
         if compiler == "unix" and platform.system() == "Darwin":
             macos_deployment_target = os.environ.get(
@@ -208,35 +195,17 @@ class CythonBuildExt(build_ext):
         super().build_extensions()
 
 
-# Prepare the Annoy extension
-# Adapted from annoy setup.py
-# Various platform-dependent extras
-extra_compile_args = []
-extra_link_args = []
-
-annoy_path = "openTSNE/dependencies/annoy/"
-annoy = Extension(
-    "openTSNE.dependencies.annoy.annoylib",
-    [annoy_path + "annoymodule.cc"],
-    depends=[annoy_path + f for f in ["annoylib.h", "kissrandom.h", "mman.h"]],
-    language="c++",
-    extra_compile_args=extra_compile_args,
-    extra_link_args=extra_link_args,
-)
-
 # Other extensions
 extensions = [
     Extension(
-        "openTSNE.quad_tree", ["openTSNE/quad_tree.pyx"], language="c++"
+        "noack.quad_tree", ["noack/quad_tree.pyx"], language="c++"
     ),
-    Extension("openTSNE._tsne", ["openTSNE/_tsne.pyx"], language="c++"),
-    Extension("openTSNE._noack", ["openTSNE/_noack.pyx"], language="c++"),
+    Extension("noack._noack", ["noack/_noack.pyx"], language="c++"),
     Extension(
-        "openTSNE.kl_divergence",
-        ["openTSNE/kl_divergence.pyx"],
+        "noack.kl_divergence",
+        ["noack/kl_divergence.pyx"],
         language="c++",
     ),
-    annoy,
 ]
 
 
@@ -244,8 +213,8 @@ extensions = [
 if has_c_library("fftw3"):
     print("FFTW3 header files found. Using FFTW implementation of FFT.")
     extension_ = Extension(
-        "openTSNE._matrix_mul.matrix_mul",
-        ["openTSNE/_matrix_mul/matrix_mul_fftw3.pyx"],
+        "noack._matrix_mul.matrix_mul",
+        ["noack/_matrix_mul/matrix_mul_fftw3.pyx"],
         libraries=["fftw3"],
         language="c++",
     )
@@ -253,8 +222,8 @@ if has_c_library("fftw3"):
 else:
     print("FFTW3 header files not found. Using numpy implementation of FFT.")
     extension_ = Extension(
-        "openTSNE._matrix_mul.matrix_mul",
-        ["openTSNE/_matrix_mul/matrix_mul_numpy.pyx"],
+        "noack._matrix_mul.matrix_mul",
+        ["noack/_matrix_mul/matrix_mul_numpy.pyx"],
         language="c++",
     )
     extensions.append(extension_)
@@ -267,21 +236,21 @@ def readme():
 
 # Read in version
 __version__: str = ""  # This is overridden by the next line
-exec(open(os.path.join("openTSNE", "version.py")).read())
+exec(open(os.path.join("noack", "version.py")).read())
 
 setup(
-    name="openTSNE",
+    name="noack",
     description="Extensible, parallel implementations of t-SNE",
     long_description=readme(),
     version=__version__,
     license="BSD-3-Clause",
     author="Pavlin Poličar",
     author_email="pavlin.g.p@gmail.com",
-    url="https://github.com/pavlin-policar/openTSNE",
+    url="https://github.com/pavlin-policar/noack",
     project_urls={
-        "Documentation": "https://opentsne.readthedocs.io/",
-        "Source": "https://github.com/pavlin-policar/openTSNE",
-        "Issue Tracker": "https://github.com/pavlin-policar/openTSNE/issues",
+        "Documentation": "https://noack.readthedocs.io/",
+        "Source": "https://github.com/pavlin-policar/noack",
+        "Issue Tracker": "https://github.com/pavlin-policar/noack/issues",
     },
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -299,7 +268,7 @@ setup(
         "Topic :: Scientific/Engineering :: Visualization",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-    packages=setuptools.find_packages(include=["openTSNE", "openTSNE.*"]),
+    packages=setuptools.find_packages(include=["noack", "noack.*"]),
     python_requires=">=3.9",
     install_requires=[
         "numpy>=1.16.6",
