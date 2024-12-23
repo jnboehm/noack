@@ -12,7 +12,6 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 from libc.stdlib cimport malloc, free
 
 from .quad_tree cimport QuadTree, Node, is_close
-from ._matrix_mul.matrix_mul cimport matrix_multiply_fft_1d, matrix_multiply_fft_2d
 
 
 cdef double EPSILON = np.finfo(np.float64).eps
