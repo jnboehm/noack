@@ -170,6 +170,7 @@ cdef void _estimate_negative_gradient_single(
         tmp = fabs(node.center_of_mass[d] - point[d])
         sqdistance += (tmp * tmp)
         w_ij = tmp ** (r - 1)
+        w_ij += tmp ** (r - 1)
 
     # Check whether we can use this node as a summary
     if node.is_leaf or node.length / sqrt(sqdistance) < theta:
