@@ -22,6 +22,8 @@ cdef extern from "math.h":
     double log(double x) nogil
     double exp(double x) nogil
     double fabs(double x) nogil
+    double pow(double x, double y) nogil
+    double powf(float x, float y) nogil
     double fmax(double x, double y) nogil
     double isinf(long double) nogil
     double INFINITY
@@ -126,7 +128,7 @@ cpdef double estimate_negative_gradient_bh(
     # worker its own memory slot to write sum_Qs
     for i in prange(num_points, nogil=True, num_threads=num_threads, schedule="guided"):
         _estimate_negative_gradient_single(
-            &tree.root, &embedding[i, 0], &gradient[i, 0], &sum_Qi[i], theta, r, dist_eps        )
+            &tree.root, &embedding[i, 0], &gradient[i, 0], &sum_Qi[i], theta, r, dist_eps)
 
     for i in range(num_points):
         sum_Q += sum_Qi[i]
@@ -168,7 +170,7 @@ cdef void _estimate_negative_gradient_single(
     # Compute the squared euclidean distance in the embedding space from the
     # new point to the center of mass
     for d in range(node.n_dims):
-        diff = node.center_of_mass[d] - point[d]
+        diff = <float> node.center_of_mass[d] - point[d]
         sqdistance += diff * diff
         if power == 0:
             w_ij += 1
@@ -178,8 +180,9 @@ cdef void _estimate_negative_gradient_single(
             # copy sqdistance
             w_ij = sqdistance + dist_eps
         elif power == 3:
-            w_ij = fabs(diff * diff * diff)
-        # w_ij += tmp ** (r - 1)
+            w_ij += fabs(diff * diff * diff)
+        else:
+            w_ij += powf(fabs(diff), (r - 1))
 
     if r - 1 < 0:
         w_ij = 1 / w_ij
