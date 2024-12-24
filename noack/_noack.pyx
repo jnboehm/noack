@@ -161,16 +161,28 @@ cdef void _estimate_negative_gradient_single(
 
     cdef:
         double sqdistance = EPSILON
-        double tmp, w_ij = dist_eps
+        double diff, power, w_ij = dist_eps
         Py_ssize_t d
 
+    power = fabs(r - 1)
     # Compute the squared euclidean distance in the embedding space from the
     # new point to the center of mass
     for d in range(node.n_dims):
-        tmp = fabs(node.center_of_mass[d] - point[d])
-        sqdistance += (tmp * tmp)
-        w_ij = tmp ** (r - 1)
-        w_ij += tmp ** (r - 1)
+        diff = node.center_of_mass[d] - point[d]
+        sqdistance += diff * diff
+        if power == 0:
+            w_ij += 1
+        if power == 1:
+            w_ij += fabs(diff)
+        elif power == 2:
+            # copy sqdistance
+            w_ij = sqdistance + dist_eps
+        elif power == 3:
+            w_ij = fabs(diff * diff * diff)
+        # w_ij += tmp ** (r - 1)
+
+    if r - 1 < 0:
+        w_ij = 1 / w_ij
 
     # Check whether we can use this node as a summary
     if node.is_leaf or node.length / sqrt(sqdistance) < theta:
