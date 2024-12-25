@@ -183,7 +183,7 @@ cdef void _estimate_negative_gradient_single(
         elif power == 3:
             w_ij += fabs(diff * diff * diff)
         else:
-            w_ij += powf(fabs(diff), r - 1)
+            w_ij += powf(fabs(diff), power)
 
     if r - 1 < 0:
         w_ij = 1 / w_ij
