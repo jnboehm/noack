@@ -70,7 +70,7 @@ cpdef tuple estimate_positive_gradient_nn(
                 w_ij = dist_eps
                 for d in range(n_dims):
                     diff[d] = embedding[i, d] - reference_embedding[j, d]
-                    w_ij = w_ij + fabs(diff[d]) ** (a - 1)
+                    w_ij = w_ij + powf(fabs(diff[d]), a - 1)
 
                 # Compute F_{attr} of point `j` on point `i`
                 for d in range(n_dims):
@@ -183,7 +183,7 @@ cdef void _estimate_negative_gradient_single(
         elif power == 3:
             w_ij += fabs(diff * diff * diff)
         else:
-            w_ij += powf(fabs(diff), (r - 1))
+            w_ij += powf(fabs(diff), r - 1)
 
     if r - 1 < 0:
         w_ij = 1 / w_ij
