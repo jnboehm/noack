@@ -61,6 +61,7 @@ cpdef tuple estimate_positive_gradient_nn(
             with gil:
                 raise MemoryError()
 
+        power = fabs(a - 1)
         for i in prange(n_samples, schedule="guided"):
             # Iterate over all the neighbors `j` and sum up their contribution
             for k in range(indptr[i], indptr[i + 1]):
@@ -68,7 +69,6 @@ cpdef tuple estimate_positive_gradient_nn(
                 p_ij = P_data[k]
                 # Compute the direction of the points attraction and the
                 # squared euclidean distance between the points
-                w_ij = dist_eps
                 for d in range(n_dims):
                     diff[d] = embedding[i, d] - reference_embedding[j, d]
                     # w_ij = w_ij + powf(fabs(diff[d]), a - 1)
