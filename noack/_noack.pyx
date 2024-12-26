@@ -46,6 +46,7 @@ cpdef tuple estimate_positive_gradient_nn(
         Py_ssize_t n_dims = gradient.shape[1]
         double * diff
         double w_ij, p_ij, q_ij, kl_divergence = 0, sum_P = 0
+        double power, tmp
 
         Py_ssize_t i, j, k, d
 
@@ -70,7 +71,21 @@ cpdef tuple estimate_positive_gradient_nn(
                 w_ij = dist_eps
                 for d in range(n_dims):
                     diff[d] = embedding[i, d] - reference_embedding[j, d]
-                    w_ij = w_ij + powf(fabs(diff[d]), a - 1)
+                    # w_ij = w_ij + powf(fabs(diff[d]), a - 1)
+                    tmp = fabs(diff[d])
+                    if power == 0:
+                        d_ij = d_ij + 1
+                    elif power == 1:
+                        d_ij = d_ij + tmp
+                    elif power == 2:
+                        d_ij = d_ij + tmp * tmp
+                    else:
+                        d_ij = d_ij + pow(tmp, power)
+
+                if a - 1 < 0:
+                    w_ij = 1 / (d_ij + eps)
+                else:
+                    w_ij = d_ij + eps
 
                 # Compute F_{attr} of point `j` on point `i`
                 for d in range(n_dims):
