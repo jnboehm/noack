@@ -98,7 +98,7 @@ cpdef tuple estimate_positive_gradient_nn(
                 if should_eval_error:
                     sum_P += p_ij
                     # Now we need to do the exp by dof
-                    kl_divergence += p_ij * log((p_ij / (pow(w_ij, a) + EPSILON)) + EPSILON)
+                    kl_divergence += p_ij * log((p_ij / (w_ij + EPSILON)) + EPSILON)
 
         free(diff)
 
