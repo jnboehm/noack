@@ -190,14 +190,14 @@ cdef void _estimate_negative_gradient_single(
         if power == 0:
             w_ij += 1.0
         if power == 1:
-            w_ij += fabs(diff)
+            w_ij += tmp
         elif power == 2:
             # copy sqdistance
             w_ij += sqdistance
         elif power == 3:
-            w_ij += fabs(diff * diff * diff)
+            w_ij += fabs(tmp * tmp * tmp)
         else:
-            w_ij += powf(fabs(diff), power)
+            w_ij += powf(tmp, power)
 
     if r - 1 < 0:
         w_ij = 1 / w_ij
