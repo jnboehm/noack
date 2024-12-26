@@ -189,7 +189,7 @@ cdef void _estimate_negative_gradient_single(
         diff = <float> node.center_of_mass[d] - point[d]
         sqdistance += diff * diff
         if power == 0:
-            w_ij += 1
+            w_ij += 1.0
         if power == 1:
             w_ij += fabs(diff)
         elif power == 2:
