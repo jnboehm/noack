@@ -185,15 +185,15 @@ cdef void _estimate_negative_gradient_single(
     # Compute the squared euclidean distance in the embedding space from the
     # new point to the center of mass
     for d in range(node.n_dims):
-        diff = <float> node.center_of_mass[d] - point[d]
-        sqdistance += diff * diff
+        tmp = fabs(node.center_of_mass[d] - point[d])
+        sqdistance += tmp * tmp
         if power == 0:
             w_ij += 1.0
         if power == 1:
             w_ij += fabs(diff)
         elif power == 2:
             # copy sqdistance
-            w_ij = sqdistance + dist_eps
+            w_ij += sqdistance
         elif power == 3:
             w_ij += fabs(diff * diff * diff)
         else:
