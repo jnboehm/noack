@@ -203,10 +203,9 @@ cdef void _estimate_negative_gradient_single(
     if r - 1 < 0:
         w_ij = 1 / w_ij
 
-    sum_Q[0] += node.num_points * w_ij
-
     # Check whether we can use this node as a summary
     if node.is_leaf or node.length / sqrt(sqdistance) < theta:
+        sum_Q[0] += node.num_points * w_ij
 
         for d in range(node.n_dims):
             gradient[d] -= node.num_points * w_ij * (point[d] - node.center_of_mass[d])
