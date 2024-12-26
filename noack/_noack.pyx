@@ -145,9 +145,8 @@ cpdef double estimate_negative_gradient_bh(
         _estimate_negative_gradient_single(
             &tree.root, &embedding[i, 0], &gradient[i, 0], &sum_Qi[i], theta, r, dist_eps)
 
-    if elastic_const < 0 and pairwise_normalization:
-        for i in range(num_points):
-            sum_Q += sum_Qi[i]
+    for i in range(num_points):
+        sum_Q += sum_Qi[i]
 
     # Normalize q_{ij}s
     for i in range(gradient.shape[0]):
