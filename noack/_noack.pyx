@@ -45,7 +45,7 @@ cpdef tuple estimate_positive_gradient_nn(
         Py_ssize_t n_samples = gradient.shape[0]
         Py_ssize_t n_dims = gradient.shape[1]
         double * diff
-        double w_ij, d_ij, p_ij, q_ij, kl_divergence = 0, sum_P = 0
+        double w_ij, d_ij = 0, p_ij, q_ij, kl_divergence = 0, sum_P = 0
         double power, tmp
 
         Py_ssize_t i, j, k, d
